@@ -3,7 +3,7 @@ import Foundation
 
 struct DailyTodo: Codable, Identifiable, Equatable {
     let id: UUID
-    let title: String
+    var title: String
     // A calendar date, not a timestamp: travelling across time zones must not move tasks.
     let day: String
     let createdAt: Date
@@ -45,6 +45,15 @@ final class TodoStore: ObservableObject {
             DailyTodo(
                 id: UUID(), title: title, day: Self.dayKey(for: date),
                 createdAt: Date(), isCompleted: false), at: 0)
+        save()
+        return true
+    }
+
+    @discardableResult
+    func updateTitle(_ id: UUID, to title: String) -> Bool {
+        let title = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !title.isEmpty, let index = items.firstIndex(where: { $0.id == id }) else { return false }
+        items[index].title = title
         save()
         return true
     }

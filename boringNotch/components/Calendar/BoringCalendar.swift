@@ -260,6 +260,7 @@ struct DailyTodoList: View {
                                 set: { revealedTodoID = $0 ? todo.id : nil }
                             ),
                             onToggle: { store.toggle(todo.id) },
+                            onRename: { store.updateTitle(todo.id, to: $0) },
                             onDelete: {
                                 store.delete(todo.id)
                                 revealedTodoID = nil
@@ -268,7 +269,8 @@ struct DailyTodoList: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, hoveringBottom ? 36 : 10)
+                // Reserve the composer overlap even while hidden so hovering never moves a checkbox.
+                .padding(.bottom, 24)
             }
             .scrollIndicators(.hidden)
 
@@ -307,6 +309,7 @@ struct DailyTodoList: View {
             .frame(height: 32)
             .contentShape(Rectangle())
             .onHover(perform: setHover)
+            .offset(y: 12)
         }
         .animation(reduceMotion ? nil : .easeOut(duration: 0.18), value: hoveringBottom)
         .onChange(of: selectedDate) { _, _ in
@@ -332,7 +335,11 @@ private struct SwipeableTodoRow: View {
     let todo: DailyTodo
     @Binding var isRevealed: Bool
     let onToggle: () -> Void
+    let onRename: (String) -> Bool
     let onDelete: () -> Void
+    @State private var isEditing = false
+    @State private var editedTitle = ""
+    @FocusState private var titleFocused: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -351,15 +358,37 @@ private struct SwipeableTodoRow: View {
             .accessibilityLabel("删除待办：\(todo.title)")
 
             HStack(alignment: .top, spacing: 7) {
-                Image(systemName: todo.isCompleted ? "checkmark.square.fill" : "square")
-                    .font(.system(size: 14))
-                    .foregroundStyle(todo.isCompleted ? Color(white: 0.55) : Color.effectiveAccent)
-                Text(todo.title)
-                    .font(.callout)
-                    .foregroundStyle(todo.isCompleted ? Color(white: 0.55) : .white)
-                    .strikethrough(todo.isCompleted)
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
+                Button(action: activateRow) {
+                    Image(systemName: todo.isCompleted ? "checkmark.square.fill" : "square")
+                        .font(.system(size: 14))
+                        .foregroundStyle(todo.isCompleted ? Color(white: 0.55) : Color.effectiveAccent)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(todo.isCompleted ? "标记为未完成" : "标记为已完成")
+                if isEditing {
+                    TextField("事项", text: $editedTitle)
+                        .font(.callout)
+                        .textFieldStyle(.plain)
+                        .focused($titleFocused)
+                        .onSubmit(commitEdit)
+                        .onExitCommand { cancelEdit() }
+                        .onChange(of: titleFocused) { _, focused in
+                            if !focused && isEditing { commitEdit() }
+                        }
+                } else {
+                    Text(todo.title)
+                        .font(.callout)
+                        .foregroundStyle(todo.isCompleted ? Color(white: 0.55) : .white)
+                        .strikethrough(todo.isCompleted)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .contentShape(Rectangle())
+                        .gesture(
+                            TapGesture(count: 2).onEnded { beginEdit() }
+                                .exclusively(before: TapGesture().onEnded { activateRow() })
+                        )
+                        .help("双击编辑事项")
+                }
                 Spacer(minLength: 0)
             }
             .padding(.vertical, 3)
@@ -367,30 +396,51 @@ private struct SwipeableTodoRow: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(.black)
             .contentShape(Rectangle())
-            .accessibilityElement(children: .ignore)
+            .accessibilityElement(children: .contain)
             .accessibilityAddTraits(.isButton)
             .accessibilityLabel(todo.title)
             .accessibilityValue(todo.isCompleted ? "已完成" : "未完成")
-            .accessibilityHint("点击切换完成状态，向左滑动显示删除按钮")
-            .accessibilityAction { activateRow() }
+            .accessibilityHint("双击文字编辑，点击方框切换完成状态，向左滑动显示删除按钮")
+            .accessibilityAction(named: Text("编辑事项")) { beginEdit() }
             .accessibilityAction(named: Text("显示删除按钮")) { isRevealed = true }
             .gesture(
                 // Once a drag is recognized, mouse-up must never activate the row.
                 // Measure in the stationary row, not the content that slides left.
                 DragGesture(minimumDistance: 12, coordinateSpace: .named(todo.id))
                     .onChanged { value in
+                        guard !isEditing else { return }
                         guard abs(value.translation.width) > abs(value.translation.height) * 1.5 else { return }
                         if value.translation.width < -20 { isRevealed = true }
                         if value.translation.width > 20 { isRevealed = false }
                     }
-                    .exclusively(before: TapGesture().onEnded { activateRow() })
+                , including: isEditing ? .subviews : .all
             )
             .offset(x: isRevealed ? -56 : 0)
         }
         .coordinateSpace(name: todo.id)
         .clipped()
-        .background(TodoSwipeMonitor { isRevealed = $0 })
+        .background(TodoSwipeMonitor { if !isEditing { isRevealed = $0 } })
+        .onDisappear { if isEditing { commitEdit() } }
         .animation(reduceMotion ? nil : .easeOut(duration: 0.18), value: isRevealed)
+    }
+
+    private func beginEdit() {
+        isRevealed = false
+        editedTitle = todo.title
+        isEditing = true
+        titleFocused = true
+    }
+
+    private func commitEdit() {
+        // Empty edits preserve the original item instead of silently deleting it.
+        _ = onRename(editedTitle)
+        isEditing = false
+        titleFocused = false
+    }
+
+    private func cancelEdit() {
+        isEditing = false
+        titleFocused = false
     }
 
     private func activateRow() {

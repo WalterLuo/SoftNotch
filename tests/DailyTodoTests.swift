@@ -24,6 +24,16 @@ struct DailyTodoTests {
         precondition(store.todos(on: today).map(\.title) == ["最早", "最新", "中间"])
         store.toggle(latest)
         precondition(store.todos(on: today).map(\.title) == ["最新", "最早", "中间"])
+        let original = store.items.first { $0.id == middle }!
+        precondition(store.updateTitle(middle, to: " 修改后的事项 "))
+        let edited = store.items.first { $0.id == middle }!
+        precondition(edited.title == "修改后的事项")
+        precondition(edited.id == original.id && edited.day == original.day)
+        precondition(edited.createdAt == original.createdAt && edited.isCompleted == original.isCompleted)
+        precondition(!store.updateTitle(middle, to: " \n "))
+        precondition(!store.updateTitle(UUID(), to: "不存在"))
+        precondition(TodoStore(defaults: defaults).items == store.items)
+        precondition(store.updateTitle(middle, to: "中间"))
         let restored = TodoStore(defaults: defaults)
         precondition(restored.todos(on: today) == store.todos(on: today))
         precondition(restored.todos(on: tomorrow).map(\.title) == ["明天"])
