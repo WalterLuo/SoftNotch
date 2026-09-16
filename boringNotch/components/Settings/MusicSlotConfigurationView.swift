@@ -2,7 +2,7 @@
 //  MusicSlotConfigurationView.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-11-17.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import Defaults
@@ -149,7 +149,7 @@ struct MusicSlotConfigurationView: View {
                                     }
                                 }
 
-                                Text(control.label)
+                                Text(LocalizedStringKey(control.label))
                                     .font(.caption2)
                                     .foregroundStyle(.secondary)
                                     .frame(width: 60)

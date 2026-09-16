@@ -2,7 +2,7 @@
 //  BoringViewCoordinator.swift
 //  boringNotch
 //
-//  Created by Alexander on 2024-11-20.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import AppKit

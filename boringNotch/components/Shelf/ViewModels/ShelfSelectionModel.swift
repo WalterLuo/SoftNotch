@@ -2,7 +2,7 @@
 //  ShelfSelectionModel.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-09-26.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import Foundation
@@ -63,6 +63,11 @@ final class ShelfSelectionModel: ObservableObject {
         selectedIDs = Set(rangeIDs)
     }
 
+    func select(_ ids: Set<UUID>) {
+        selectedIDs = ids
+        lastAnchorID = nil
+    }
+
     func clear() {
         selectedIDs.removeAll()
         lastAnchorID = nil
@@ -70,6 +75,7 @@ final class ShelfSelectionModel: ObservableObject {
 
     // Keep anchor sane if items array changed drastically (optional helper)
     func ensureValidAnchor(in allItems: [ShelfItem]) {
+        selectedIDs.formIntersection(Set(allItems.map(\.id)))
         if let anchor = lastAnchorID, !allItems.contains(where: { $0.id == anchor }) {
             lastAnchorID = selectedIDs.first
         }

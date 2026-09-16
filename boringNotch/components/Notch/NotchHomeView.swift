@@ -2,7 +2,7 @@
 //  NotchHomeView.swift
 //  boringNotch
 //
-//  Created by Hugo Persson on 2024-08-18.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //  Modified by Harsh Vardhan Goswami & Richard Kunkli & Mustafa Ramadan
 //
 

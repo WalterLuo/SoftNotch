@@ -2,7 +2,7 @@
 //  HoverButton.swift
 //  boringNotch
 //
-//  Created by Kraigo on 04.09.2024.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import SwiftUI

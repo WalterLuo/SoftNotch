@@ -2,7 +2,7 @@
 //  KeyboardShortcutsHelper.swift
 //  boringNotch
 //
-//  Created by Richard Kunkli on 16/08/2024.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import KeyboardShortcuts

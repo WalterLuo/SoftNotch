@@ -2,7 +2,7 @@
 //  BoringViewModel.swift
 //  boringNotch
 //
-//  Created by Harsh Vardhan  Goswami  on 04/08/24.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import Combine
@@ -199,7 +199,7 @@ class BoringViewModel: NSObject, ObservableObject {
 
     func close() {
         // Do not close while a share picker or sharing service is active
-        if SharingStateManager.shared.preventNotchClose {
+        if SharingStateManager.shared.preventNotchClose || ScreenshotManager.shared.preventsClosing {
             return
         }
         self.notchSize = getClosedNotchSize(screenUUID: self.screenUUID)

@@ -2,7 +2,7 @@
 //  BoringExtrasMenu.swift
 //  boringNotch
 //
-//  Created by Harsh Vardhan  Goswami  on 04/08/24.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import SwiftUI
@@ -38,18 +38,6 @@ struct BoringExtrasMenu : View {
                 close
             }
         }
-    }
-    
-    var github: some View {
-        BoringLargeButtons(
-            action: {
-                if let url = URL(string: "https://github.com/TheBoredTeam/boring.notch") {
-                    NSWorkspace.shared.open(url)
-                }
-            },
-            icon: Image(.github),
-            title: "Checkout"
-        )
     }
     
     var settings: some View {

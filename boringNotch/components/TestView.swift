@@ -2,7 +2,7 @@
 //  TestView.swift
 //  boringNotch
 //
-//  Created by Richard Kunkli on 14/08/2024.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import SwiftUI

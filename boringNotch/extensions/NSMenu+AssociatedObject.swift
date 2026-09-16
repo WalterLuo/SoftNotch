@@ -2,7 +2,7 @@
 //  NSMenu+AssociatedObject.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-10-05.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import AppKit

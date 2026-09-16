@@ -2,7 +2,7 @@
 //  NSItemProvider+LoadHelpers.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-09-24.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 

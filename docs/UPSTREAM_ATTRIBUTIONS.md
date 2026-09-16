@@ -1,0 +1,119 @@
+# SoftNotch 来源与署名记录
+
+SoftNotch 由 Walterluo 维护和修改，基于 TheBoredTeam/boring.notch。
+原项目：https://github.com/TheBoredTeam/boring.notch
+
+LICENSE 和 THIRD_PARTY_LICENSES 保留原文。以下保留上游源码的原始作者记录。
+
+- `boringNotch/boringNotchApp.swift`：//  Created by Harsh Vardhan  Goswami  on 02/08/24.
+- `boringNotch/BoringViewCoordinator.swift`：//  Created by Alexander on 2024-11-20.
+- `boringNotch/ContentView.swift`：//  Created by Harsh Vardhan Goswami  on 02/08/24
+- `boringNotch/MediaControllers/NowPlayingController.swift`：//  Created by Alexander on 2025-03-29.
+- `boringNotch/MediaControllers/AppleMusicController.swift`：//  Created by Alexander on 2025-03-29.
+- `boringNotch/MediaControllers/SpotifyController.swift`：//  Created by Alexander on 2025-03-29.
+- `boringNotch/MediaControllers/MediaControllerProtocol.swift`：//  Created by Alexander on 2025-03-29.
+- `boringNotch/MediaControllers/YouTube Music Controller/YouTubeMusicModels.swift`：//  Created by Alexander on 2025-09-14.
+- `boringNotch/MediaControllers/YouTube Music Controller/YouTubeMusicNetworking.swift`：//  Created by Alexander on 2025-09-14.
+- `boringNotch/MediaControllers/YouTube Music Controller/YouTubeMusicAuthentication.swift`：//  Created by Alexander on 2025-09-14.
+- `boringNotch/Providers/CalendarServiceProviding.swift`：//  Created by Paker on 31/12/20.
+- `boringNotch/managers/ImageService.swift`：//  Created by Alexander on 2025-09-13.
+- `boringNotch/managers/MusicManager.swift`：//  Created by Harsh Vardhan  Goswami  on 03/08/24.
+- `boringNotch/managers/NotchSpaceManager.swift`：//  Created by Alexander on 2024-10-27.
+- `boringNotch/managers/BrightnessManager.swift`：//  Created by JeanLouis on 08/22/24.
+- `boringNotch/managers/VolumeManager.swift`：//  Created by JeanLouis on 22/08/2025.
+- `boringNotch/managers/WebcamManager.swift`：//  Created by Harsh Vardhan  Goswami  on 19/08/24.
+- `boringNotch/managers/CalendarManager.swift`：//  Created by Harsh Vardhan  Goswami  on 08/09/24.
+- `boringNotch/enums/generic.swift`：//  Created by Harsh Vardhan  Goswami  on 04/08/24.
+- `boringNotch/XPCHelperClient/BoringNotchXPCHelperProtocol.swift`：//  Created by Alexander on 2025-11-16.
+- `boringNotch/models/Constants.swift`：//  Created by Richard Kunkli on 2024. 10. 17..
+- `boringNotch/models/CalendarModel.swift`：//  Created by Paker on 31/12/20.
+- `boringNotch/models/SharingStateManager.swift`：//  Created by Alexander on 2025-10-10.
+- `boringNotch/models/EventModel.swift`：//  Created by Paker on 24/12/20.
+- `boringNotch/models/MusicControlButton.swift`：//  Created by Alexander on 2025-11-16.
+- `boringNotch/models/BoringViewModel.swift`：//  Created by Harsh Vardhan  Goswami  on 04/08/24.
+- `boringNotch/models/PlaybackState.swift`：//  Created by Alexander on 2025-03-29.
+- `boringNotch/extensions/PanGesture.swift`：//  Created by Richard Kunkli on 21/08/2024.
+- `boringNotch/extensions/NSImage+Extensions.swift`：//  Created by Richard Kunkli on 07/08/2024.
+- `boringNotch/extensions/NSMenu+AssociatedObject.swift`：//  Created by Alexander on 2025-10-05.
+- `boringNotch/extensions/ActionBar.swift`：//  Created by Richard Kunkli on 15/09/2024.
+- `boringNotch/extensions/ConditionalModifier.swift`：//  Created by Richard Kunkli on 20/08/2024.
+- `boringNotch/extensions/MouseTracker.swift`：//  Created by Richard Kunkli on 12/08/2024.
+- `boringNotch/extensions/URL+SecurityScoped.swift`：//  Created by Alexander on 2025-10-07.
+- `boringNotch/extensions/NSItemProvider+LoadHelpers.swift`：//  Created by Alexander on 2025-09-24.
+- `boringNotch/extensions/NSScreen+UUID.swift`：//  Created by Alexander on 2025-11-21.
+- `boringNotch/extensions/BundleInfos.swift`：//  Created by Richard Kunkli on 08/08/2024.
+- `boringNotch/extensions/KeyboardShortcutsHelper.swift`：//  Created by Richard Kunkli on 16/08/2024.
+- `boringNotch/extensions/Color+AccentColor.swift`：//  Created by Alexander on 2025-10-24.
+- `boringNotch/extensions/Button+Bouncing.swift`：//  Created by Harsh Vardhan  Goswami  on 19/08/24.
+- `boringNotch/extensions/DataTypes+Extensions.swift`：//  Created by Harsh Vardhan  Goswami  on 27/08/24.
+- `boringNotch/sizing/matters.swift`：//  Created by Harsh Vardhan  Goswami  on 05/08/24.
+- `boringNotch/components/HoverButton.swift`：//  Created by Kraigo on 04.09.2024.
+- `boringNotch/components/WhatsNewView.swift`：//  Created by Richard Kunkli on 09/08/2024.
+- `boringNotch/components/AnimatedFace.swift`：// Created by Harsh Vardhan  Goswami  on  04/08/24.
+- `boringNotch/components/EmptyState.swift`：// Created by Harsh Vardhan  Goswami  on  04/08/24.
+- `boringNotch/components/TestView.swift`：//  Created by Richard Kunkli on 14/08/2024.
+- `boringNotch/components/ProgressIndicator.swift`：//  Created by Harsh Vardhan  Goswami  on 11/08/24.
+- `boringNotch/components/LottieView.swift`：//  Created by Alexander on 2025-11-14.
+- `boringNotch/components/Notch/NotchShape.swift`：// Created by Kai Azim on 2023-08-24.
+- `boringNotch/components/Notch/BoringExtrasMenu.swift`：//  Created by Harsh Vardhan  Goswami  on 04/08/24.
+- `boringNotch/components/Notch/BoringNotchWindow.swift`：//  Created by Harsh Vardhan  Goswami  on 06/08/24.
+- `boringNotch/components/Notch/BoringHeader.swift`：//  Created by Harsh Vardhan  Goswami  on 04/08/24.
+- `boringNotch/components/Notch/BoringNotchSkyLightWindow.swift`：//  Created by Alexander on 2025-10-20.
+- `boringNotch/components/Notch/NotchHomeView.swift`：//  Created by Hugo Persson on 2024-08-18.
+- `boringNotch/components/Tabs/TabButton.swift`：//  Created by Hugo Persson on 2024-08-24.
+- `boringNotch/components/Tabs/TabSelectionView.swift`：//  Created by Hugo Persson on 2024-08-25.
+- `boringNotch/components/Music/MusicVisualizer.swift`：//  Created by Harsh Vardhan  Goswami  on 02/08/24.
+- `boringNotch/components/Music/LottieAnimationView.swift`：//  Created by Richard Kunkli on 2024. 10. 29..
+- `boringNotch/components/Settings/EditPanelView.swift`：//  Created by Richard Kunkli on 12/08/2024.
+- `boringNotch/components/Settings/MusicSlotConfigurationView.swift`：//  Created by Alexander on 2025-11-17.
+- `boringNotch/components/Settings/ListItemPopover.swift`：//  Created by Richard Kunkli on 15/09/2024.
+- `boringNotch/components/Settings/SettingsView.swift`：//  Created by Richard Kunkli on 07/08/2024.
+- `boringNotch/components/Settings/SettingsWindowController.swift`：//  Created by Alexander on 2025-06-14.
+- `boringNotch/components/Settings/SoftwareUpdater.swift`：//  Created by Richard Kunkli on 09/08/2024.
+- `boringNotch/components/Calendar/BoringCalendar.swift`：//  Created by Harsh Vardhan  Goswami  on 08/09/24.
+- `boringNotch/components/Tips/TipStore.swift`：//  Created by Richard Kunkli on 15/09/2024.
+- `boringNotch/components/Shelf/ViewModels/ShelfItemViewModel.swift`：//  Created by Alexander on 2025-09-24.
+- `boringNotch/components/Shelf/ViewModels/ShelfStateViewModel.swift`：//  Created by Alexander on 2025-10-09.
+- `boringNotch/components/Shelf/ViewModels/ShelfSelectionModel.swift`：//  Created by Alexander on 2025-09-26.
+- `boringNotch/components/Shelf/Models/ShelfItem.swift`：//  Created by Alexander on 2025-09-24.
+- `boringNotch/components/Shelf/Models/Bookmark.swift`：//  Created by Alexander on 2025-10-08.
+- `boringNotch/components/Shelf/Views/ShelfView.swift`：//  Created by Alexander on 2025-09-24.
+- `boringNotch/components/Shelf/Views/FileShareView.swift`：//  Created by Alexander on 2025-09-24.
+- `boringNotch/components/Shelf/Views/ShelfItemView.swift`：//  Created by Alexander on 2025-09-24.
+- `boringNotch/components/Shelf/Services/TemporaryFileStorageService.swift`：//  Created by Alexander on 2025-09-24.
+- `boringNotch/components/Shelf/Services/ShareServiceFinder.swift`：//  Created by Alexander on 2025-10-06.
+- `boringNotch/components/Shelf/Services/ShelfActionService.swift`：//  Created by Alexander on 2025-10-07.
+- `boringNotch/components/Shelf/Services/QuickShareService.swift`：//  Created by Alexander on 2025-09-24.
+- `boringNotch/components/Shelf/Services/ShelfPersistenceService.swift`：//  Created by Alexander on 2025-09-24.
+- `boringNotch/components/Shelf/Services/ImageProcessingService.swift`：//  Created by Alexander on 2025-10-16.
+- `boringNotch/components/Shelf/Services/ThumbnailService.swift`：//  Created by Alexander on 2025-10-07.
+- `boringNotch/components/Shelf/Services/QuickLookService.swift`：//  Created by Alexander on 2025-10-07.
+- `boringNotch/components/Shelf/Services/ShelfDropService.swift`：//  Created by Alexander on 2025-09-26.
+- `boringNotch/components/Webcam/WebcamView.swift`：//  Created by Harsh Vardhan  Goswami  on 19/08/24.
+- `boringNotch/components/Live activities/SystemEventIndicatorModifier.swift`：//  Created by Richard Kunkli on 12/08/2024.
+- `boringNotch/components/Live activities/OpenNotchHUD.swift`：//  Created by Alexander on 2024-11-23.
+- `boringNotch/components/Live activities/LiveActivityModifier.swift`：//  Created by Richard Kunkli on 12/08/2024.
+- `boringNotch/components/Live activities/InlineHUD.swift`：//  Created by Richard Kunkli on 14/09/2024.
+- `boringNotch/components/Live activities/MarqueeTextView.swift`：//  Created by Richard Kunkli on 08/08/2024.
+- `boringNotch/components/Live activities/DownloadView.swift`：//  Created by Harsh Vardhan  Goswami  on 17/08/24.
+- `boringNotch/components/Onboarding/SparkleView.swift`：//  Created by Richard Kunkli on 2024. 09. 26..
+- `boringNotch/components/Onboarding/MusicControllerSelectionView.swift`：//  Created by Alexander on 2025-06-23.
+- `boringNotch/components/Onboarding/PermissionsRequestView.swift`：//  Created by Alexander on 2025-06-23.
+- `boringNotch/components/Onboarding/WelcomeView.swift`：//  Created by Richard Kunkli on 2024. 09. 26..
+- `boringNotch/components/Onboarding/OnboardingView.swift`：//  Created by Alexander on 2025-06-23.
+- `boringNotch/components/Onboarding/OnboardingFinishView.swift`：//  Created by Alexander on 2025-06-23.
+- `boringNotch/Shortcuts/ShortcutConstants.swift`：//  Created by Richard Kunkli on 16/08/2024.
+- `boringNotch/observers/DragDetector.swift`：//  Created by Alexander on 2025-11-20.
+- `boringNotch/observers/MediaKeyInterceptor.swift`：//  Created by Alexander on 2025-11-23.
+- `boringNotch/observers/FullscreenMediaDetection.swift`：//  Created by Richard Kunkli on 06/09/2024.
+- `boringNotch/helpers/AudioPlayer.swift`：//  Created by Harsh Vardhan  Goswami  on 09/08/24.
+- `boringNotch/helpers/AppIcons.swift`：//  Created by Harsh Vardhan  Goswami  on 16/08/24.
+- `boringNotch/helpers/AssociatedObject.swift`：//  Created by Alexander on 2025-10-05.
+- `boringNotch/helpers/ApplicationRelauncher.swift`：//  Created by Corentin132 on 03/10/2025.
+- `boringNotch/helpers/AppleScriptHelper.swift`：//  Created by Alexander on 2025-03-29.
+- `boringNotch/helpers/MediaChecker.swift`：//  Created by Alexander on 2025-07-26.
+- `boringNotch/animations/HelloAnimation.swift`：//  Created by Harsh Vardhan  Goswami  on 08/08/24.
+- `boringNotch/animations/drop.swift`：//  Created by Harsh Vardhan  Goswami  on  04/08/24.
+- `BoringNotchXPCHelper/BoringNotchXPCHelperProtocol.swift`：//  Created by Alexander on 2025-11-16.
+- `BoringNotchXPCHelper/BoringNotchXPCHelper.swift`：//  Created by Alexander on 2025-11-16.
+- `BoringNotchXPCHelper/main.swift`：//  Created by Alexander on 2025-11-16.

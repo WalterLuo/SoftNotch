@@ -2,7 +2,7 @@
 //  MusicControlButton.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-11-16.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import Defaults

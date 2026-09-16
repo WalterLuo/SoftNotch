@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  boringNotchApp
 //
-//  Created by Harsh Vardhan Goswami  on 02/08/24
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //  Modified by Richard Kunkli on 24/08/2024.
 //
 
@@ -214,6 +214,14 @@ struct ContentView: View {
         .background(dragDetector)
         .preferredColorScheme(.dark)
         .environmentObject(vm)
+        .onReceive(NotificationCenter.default.publisher(for: .screenshotAddedToShelf)) { notification in
+            guard let target = notification.object as? String,
+                  vm.screenUUID == target || (vm.screenUUID == nil && target == coordinator.selectedScreenUUID) else { return }
+            hoverTask?.cancel()
+            anyDropDebounceTask?.cancel()
+            coordinator.currentView = .shelf
+            doOpen()
+        }
         .onChange(of: vm.anyDropZoneTargeting) { _, isTargeted in
             anyDropDebounceTask?.cancel()
 

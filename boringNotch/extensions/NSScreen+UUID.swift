@@ -2,7 +2,7 @@
 //  NSScreen+UUID.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-11-21.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import AppKit

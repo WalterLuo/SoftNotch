@@ -2,7 +2,7 @@
 //  MediaChecker.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-07-26.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import Foundation

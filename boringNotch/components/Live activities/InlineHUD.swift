@@ -2,7 +2,7 @@
 //  InlineHUDs.swift
 //  boringNotch
 //
-//  Created by Richard Kunkli on 14/09/2024.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import SwiftUI

@@ -2,7 +2,7 @@
 //  AppleMusicController.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-03-29.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import Foundation

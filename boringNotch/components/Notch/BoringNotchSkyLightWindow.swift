@@ -2,7 +2,7 @@
 //  BoringNotchSkyLightWindow.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-10-20.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import Cocoa
@@ -53,6 +53,7 @@ class BoringNotchSkyLightWindow: NSPanel {
     
     private func configureWindow() {
         isFloatingPanel = true
+        becomesKeyOnlyIfNeeded = true
         isOpaque = false
         titleVisibility = .hidden
         titlebarAppearsTransparent = true
@@ -109,6 +110,6 @@ class BoringNotchSkyLightWindow: NSPanel {
     
     private var observers: Set<AnyCancellable> = []
     
-    override var canBecomeKey: Bool { false }
+    override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
 }

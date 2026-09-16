@@ -2,7 +2,7 @@
 //  MusicControllerSelectionView.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-06-23.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import SwiftUI
@@ -88,7 +88,7 @@ struct ControllerOptionView: View {
                 .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isSelected)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(controller.rawValue)
+                Text(controller.displayName)
                     .font(.headline)
                     .fontWeight(.semibold)
 
@@ -123,7 +123,7 @@ extension MediaControllerType {
     var description: String {
         switch self {
         case .nowPlaying:
-            return "Works with most media apps, including browsers, to detect what's playing. Note: This may be removed in a future macOS version."
+            return "自动读取 macOS 当前播放信息，适用于向系统提供播放信息的网易云、QQ 音乐及其他播放器。请先在音乐 App 中开始播放。"
         case .spotify:
             return "Connects directly to the Spotify app."
         case .appleMusic:

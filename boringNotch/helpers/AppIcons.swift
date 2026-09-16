@@ -2,7 +2,7 @@
 //  AppIcons.swift
 //  boringNotch
 //
-//  Created by Harsh Vardhan  Goswami  on 16/08/24.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import SwiftUI

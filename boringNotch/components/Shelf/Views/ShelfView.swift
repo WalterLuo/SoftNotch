@@ -2,7 +2,7 @@
 //  ShelfItemView.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-09-24.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import SwiftUI
@@ -13,6 +13,8 @@ struct ShelfView: View {
     @StateObject var tvm = ShelfStateViewModel.shared
     @StateObject var selection = ShelfSelectionModel.shared
     @StateObject private var quickLookService = QuickLookService()
+    @State private var itemFrames: [UUID: CGRect] = [:]
+    @State private var selectionRect: CGRect?
     private let spacing: CGFloat = 8
 
     var body: some View {
@@ -28,6 +30,9 @@ struct ShelfView: View {
         // Bind Quick Look to shelf selection
         .onChange(of: selection.selectedIDs) {
             updateQuickLookSelection()
+        }
+        .onChange(of: tvm.items) { _, items in
+            selection.ensureValidAnchor(in: items)
         }
         .quickLookPresenter(using: quickLookService)
     }
@@ -74,7 +79,32 @@ struct ShelfView: View {
                 transaction.animation = vm.animation
             }
             .contentShape(Rectangle())
-            .onTapGesture { selection.clear() }
+            .coordinateSpace(name: "shelfSelection")
+            .onPreferenceChange(ShelfItemFrames.self) { itemFrames = $0 }
+            .overlay(alignment: .topLeading) {
+                if let rect = selectionRect {
+                    Rectangle()
+                        .fill(Color.accentColor.opacity(0.15))
+                        .overlay(Rectangle().stroke(Color.accentColor, lineWidth: 1))
+                        .frame(width: rect.width, height: rect.height)
+                        .offset(x: rect.minX, y: rect.minY)
+                        .allowsHitTesting(false)
+                }
+            }
+            .background(GeometryReader { geometry in
+                ShelfSelectionInput(
+                frames: itemFrames,
+                isEnabled: vm.notchState == .open,
+                onRectangle: { selectionRect = $0 },
+                onDelete: {
+                    let selected = selection.selectedItems(in: tvm.items)
+                    quickLookService.hide()
+                    selected.forEach { tvm.remove($0) }
+                    selection.clear()
+                }
+                )
+                .frame(width: geometry.size.width, height: geometry.size.height)
+            })
     }
 
     var content: some View {
@@ -98,6 +128,10 @@ struct ShelfView: View {
                         ForEach(tvm.items) { item in
                             ShelfItemView(item: item)
                                 .environmentObject(quickLookService)
+                                .background(GeometryReader { geometry in
+                                    Color.clear.preference(key: ShelfItemFrames.self,
+                                        value: [item.id: geometry.frame(in: .named("shelfSelection"))])
+                                })
                         }
                     }
                 }
@@ -110,6 +144,113 @@ struct ShelfView: View {
         }
         .onAppear {
             ShelfStateViewModel.shared.cleanupInvalidItems()
+        }
+    }
+}
+
+private struct ShelfItemFrames: PreferenceKey {
+    static var defaultValue: [UUID: CGRect] = [:]
+    static func reduce(value: inout [UUID: CGRect], nextValue: () -> [UUID: CGRect]) {
+        value.merge(nextValue(), uniquingKeysWith: { _, new in new })
+    }
+}
+
+// Observe only this panel's events, leaving file drags on thumbnails intact.
+private struct ShelfSelectionInput: NSViewRepresentable {
+    let frames: [UUID: CGRect]
+    let isEnabled: Bool
+    let onRectangle: (CGRect?) -> Void
+    let onDelete: () -> Void
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
+    func makeNSView(context: Context) -> NSView {
+        let view = FlippedView()
+        context.coordinator.install(view)
+        return view
+    }
+    func updateNSView(_ view: NSView, context: Context) {
+        context.coordinator.isEnabled = isEnabled
+        context.coordinator.frames = frames
+        context.coordinator.onRectangle = onRectangle
+        context.coordinator.onDelete = onDelete
+    }
+    static func dismantleNSView(_ view: NSView, coordinator: Coordinator) { coordinator.remove() }
+
+    final class FlippedView: NSView {
+        override var isFlipped: Bool { true }
+        override var acceptsFirstResponder: Bool { true }
+        // This view only measures the panel and owns keyboard focus. It must not
+        // become a mouse target in SwiftUI's shared hosting view (including headers).
+        override func hitTest(_ point: NSPoint) -> NSView? { nil }
+    }
+
+    @MainActor final class Coordinator {
+        var isEnabled = false
+        var frames: [UUID: CGRect] = [:]
+        var onRectangle: ((CGRect?) -> Void)?
+        var onDelete: (() -> Void)?
+        private var monitor: Any?
+        private var origin: CGPoint?
+        private var initialSelection: Set<UUID> = []
+
+        func install(_ view: NSView) {
+            monitor = NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown, .leftMouseDragged, .leftMouseUp, .keyDown]) { [weak self, weak view] event in
+                guard let self, self.isEnabled, let view, let window = view.window,
+                      !view.isHiddenOrHasHiddenAncestor, !view.visibleRect.isEmpty,
+                      event.window === window else { return event }
+                let selection = ShelfSelectionModel.shared
+                if event.type == .keyDown {
+                    guard window.isKeyWindow, !(window.firstResponder is NSTextView),
+                          !selection.isDragging else { return event }
+                    if event.keyCode == 51 && event.modifierFlags.intersection([.command, .shift, .option, .control]) == .command,
+                       selection.hasSelection {
+                        self.onDelete?()
+                        return nil
+                    }
+                    if event.keyCode == 53 {
+                        self.origin = nil
+                        self.onRectangle?(nil)
+                        selection.clear()
+                        return nil
+                    }
+                    return event
+                }
+                let point = view.convert(event.locationInWindow, from: nil)
+                switch event.type {
+                case .leftMouseDown:
+                    guard view.bounds.intersection(view.visibleRect).contains(point) else {
+                        self.origin = nil
+                        return event
+                    }
+                    window.makeKey()
+                    window.makeFirstResponder(view)
+                    guard !self.frames.values.contains(where: { $0.contains(point) }) else { return event }
+                    self.origin = point
+                    self.initialSelection = event.modifierFlags.contains(.command) || event.modifierFlags.contains(.shift) ? selection.selectedIDs : []
+                    selection.select(self.initialSelection)
+                    return nil
+                case .leftMouseDragged:
+                    guard let origin = self.origin else { return event }
+                    let clippedPoint = CGPoint(x: min(max(point.x, view.bounds.minX), view.bounds.maxX),
+                                               y: min(max(point.y, view.bounds.minY), view.bounds.maxY))
+                    let rect = CGRect(x: min(origin.x, clippedPoint.x), y: min(origin.y, clippedPoint.y),
+                                      width: abs(origin.x - clippedPoint.x), height: abs(origin.y - clippedPoint.y))
+                    let hits = Set(self.frames.compactMap { id, frame in frame.intersects(rect) ? id : nil })
+                    selection.select(self.initialSelection.union(hits))
+                    self.onRectangle?(rect)
+                    return nil
+                case .leftMouseUp:
+                    guard self.origin != nil else { return event }
+                    self.origin = nil
+                    self.onRectangle?(nil)
+                    return nil
+                default: return event
+                }
+            }
+        }
+        func remove() {
+            if let monitor { NSEvent.removeMonitor(monitor) }
+            monitor = nil
         }
     }
 }

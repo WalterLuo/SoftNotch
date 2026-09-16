@@ -2,7 +2,7 @@
 //  MusicManager.swift
 //  boringNotch
 //
-//  Created by Harsh Vardhan  Goswami  on 03/08/24.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 import AppKit
 import Combine
@@ -215,6 +215,9 @@ class MusicManager: ObservableObject {
                 if let appIconImage = AppIconAsNSImage(for: state.bundleIdentifier) {
                     self.usingAppIconForArtwork = true
                     self.updateAlbumArt(newAlbumArt: appIconImage)
+                } else {
+                    self.usingAppIconForArtwork = true
+                    self.updateAlbumArt(newAlbumArt: defaultImage)
                 }
             }
             self.artworkData = state.artwork
@@ -271,6 +274,7 @@ class MusicManager: ObservableObject {
             self.isShuffled = state.isShuffled
         }
 
+        self.canFavoriteTrack = activeController?.supportsFavorite ?? false
         if state.bundleIdentifier != self.bundleIdentifier {
             self.bundleIdentifier = state.bundleIdentifier
             // Update volume control support from active controller

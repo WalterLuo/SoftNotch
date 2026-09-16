@@ -2,7 +2,7 @@
 //  SoftwareUpdater.swift
 //  boringNotch
 //
-//  Created by Richard Kunkli on 09/08/2024.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import SwiftUI

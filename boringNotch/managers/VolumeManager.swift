@@ -2,7 +2,7 @@
 //  VolumeManager.swift
 //  boringNotch
 //
-//  Created by JeanLouis on 22/08/2025.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import AppKit

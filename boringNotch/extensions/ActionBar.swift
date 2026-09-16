@@ -2,7 +2,7 @@
 //  ActionBar.swift
 //  boringNotch
 //
-//  Created by Richard Kunkli on 15/09/2024.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import SwiftUI

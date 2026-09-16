@@ -2,7 +2,7 @@
 //  BoringHeader.swift
 //  boringNotch
 //
-//  Created by Harsh Vardhan  Goswami  on 04/08/24.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import Defaults
@@ -12,6 +12,7 @@ struct BoringHeader: View {
     @EnvironmentObject var vm: BoringViewModel
     @ObservedObject var batteryModel = BatteryStatusViewModel.shared
     @ObservedObject var coordinator = BoringViewCoordinator.shared
+    @ObservedObject private var screenshotManager = ScreenshotManager.shared
     @StateObject var tvm = ShelfStateViewModel.shared
     var body: some View {
         HStack(spacing: 0) {
@@ -58,6 +59,18 @@ struct BoringHeader: View {
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
+                        Button {
+                            screenshotManager.captureRegion(screenUUID: vm.screenUUID)
+                        } label: {
+                            Image(systemName: "camera.viewfinder")
+                                .foregroundColor(.white)
+                                .frame(width: 30, height: 30)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(screenshotManager.isCapturing)
+                        .help("框选截屏并暂存")
+                        .accessibilityLabel("框选截屏")
                         if Defaults[.settingsIconInNotch] {
                             Button(action: {
                                 DispatchQueue.main.async {
@@ -100,6 +113,14 @@ struct BoringHeader: View {
         }
         .foregroundColor(.gray)
         .environmentObject(vm)
+        .alert("截屏", isPresented: Binding(
+            get: { screenshotManager.errorMessage != nil },
+            set: { if !$0 { screenshotManager.errorMessage = nil } }
+        )) {
+            Button("好", role: .cancel) { screenshotManager.errorMessage = nil }
+        } message: {
+            Text(screenshotManager.errorMessage ?? "")
+        }
     }
 
     func isHUDType(_ type: SneakContentType) -> Bool {

@@ -1,0 +1,11 @@
+Generated using built-in image_gen. Option 3 (03-purple-capture.png) was selected and applied as the SoftNotch application icon.
+
+## Option 1
+Use case: logo-brand. Generate ONE square macOS application icon concept for a playful productivity app nicknamed 噗噗噗💨, an expandable Mac notch utility combining screenshots, file shelf and daily tasks. Concept A: precise minimalist graphite-black rounded-square tile with a small top-center notch indentation motif, one bold sculpted cyan-white gust/puff of air curling out from a black horizontal capsule shelf. Refined satin 3D material, tasteful restrained highlights, crisp silhouette legible at 32px, centered icon filling 85% canvas, straight-on orthographic, pale neutral background outside rounded tile. Professional native macOS dock icon. No letters, no text, no number, no watermark, no other icons, no collage.
+
+## Option 2
+Use case: logo-brand. Generate ONE square macOS application icon concept for a playful productivity app nicknamed 噗噗噗💨, an expandable Mac notch utility for screenshot capture, temporary file shelf and todos. Concept B: friendly minimalist puffy orange air-cloud mascot, three softly rounded lobes and two tiny trailing air puffs, resting above a dark curved notch-shaped tray. Ivory-white rounded-square macOS tile, warm orange sculpted soft silicone cloud, restrained dimensional shadow. Cheerful clever visual pun on puffing air, no face, no poop, no flames. Bold simple geometry, recognizable at 32px, centered fills 85% canvas, straight-on orthographic, pale gray backdrop outside tile. No letters, text, number, watermark, or collage.
+
+## Option 3
+Use case: logo-brand. Generate ONE square macOS application icon concept for a Mac notch productivity app nicknamed 噗噗噗💨. Concept C: vivid violet rounded-square tile with a single white folded paper screenshot slipping into a black floating notch capsule tray; the paper has two tiny cyan crop-corner marks and its lower edge curls into a simple flowing puff of air. Native macOS icon, elegant dimensional paper and satin black, sharp readable silhouette, minimal 3D, centered 85% canvas occupancy, straight-on orthographic, pale neutral backdrop outside the tile. Focus on capture and quick file shelving, not a folder. No text, letters, numbers, watermark, or multiple icons.
+

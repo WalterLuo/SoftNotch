@@ -2,7 +2,7 @@
 //  PanGesture.swift
 //  boringNotch
 //
-//  Created by Richard Kunkli on 21/08/2024.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import AppKit

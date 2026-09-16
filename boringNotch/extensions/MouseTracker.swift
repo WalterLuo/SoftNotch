@@ -2,7 +2,7 @@
 //  MouseTracker.swift
 //  boringNotch
 //
-//  Created by Richard Kunkli on 12/08/2024.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import SwiftUI

@@ -2,7 +2,7 @@
 //  BoringCalendar.swift
 //  boringNotch
 //
-//  Created by Harsh Vardhan  Goswami  on 08/09/24.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import Defaults
@@ -180,7 +180,6 @@ struct WheelPicker: View {
 
 struct CalendarView: View {
     @EnvironmentObject var vm: BoringViewModel
-    @ObservedObject private var calendarManager = CalendarManager.shared
     @State private var selectedDate = Date()
 
     var body: some View {
@@ -213,262 +212,244 @@ struct CalendarView: View {
                 }
             }
 
-            let filteredEvents = EventListView.filteredEvents(
-                events: calendarManager.events
-            )
-            if filteredEvents.isEmpty {
-                EmptyEventsView(selectedDate: selectedDate)
-                Spacer(minLength: 0)
-            } else {
-                EventListView(events: calendarManager.events)
-            }
+            DailyTodoList(selectedDate: selectedDate)
         }
-        .listRowBackground(Color.clear)
         .frame(height: 120)
-        .onChange(of: selectedDate) {
-            Task {
-                await calendarManager.updateCurrentDate(selectedDate)
-            }
-        }
-        .onChange(of: vm.notchState) { _, _ in
-            Task {
-                await calendarManager.updateCurrentDate(Date.now)
-                selectedDate = Date.now
-            }
-        }
-        .onAppear {
-            Task {
-                await calendarManager.updateCurrentDate(Date.now)
-                selectedDate = Date.now
-            }
+        .onChange(of: vm.notchState) { _, state in
+            if state == .closed { selectedDate = Date.now }
         }
     }
 }
 
-struct EmptyEventsView: View {
+struct DailyTodoList: View {
     let selectedDate: Date
-    
-    var body: some View {
-        VStack {
-            Image(systemName: "calendar.badge.checkmark")
-                .font(.title)
-                .foregroundColor(Color(white: 0.65))
-            Text(Calendar.current.isDateInToday(selectedDate) ? "No events today" : "No events")
-                .font(.subheadline)
-                .foregroundColor(.white)
-            Text("Enjoy your free time!")
-                .font(.caption)
-                .foregroundColor(Color(white: 0.65))
-        }
+    @ObservedObject private var store = TodoStore.shared
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var revealedTodoID: UUID?
+    @State private var hoveringBottom = false
+    @State private var drafts: [String: String] = [:]
+    @FocusState private var inputFocused: Bool
+
+    private var dayKey: String { TodoStore.dayKey(for: selectedDate) }
+    private var draft: Binding<String> {
+        Binding(get: { drafts[dayKey, default: ""] }, set: { drafts[dayKey] = $0 })
     }
-}
-
-struct EventListView: View {
-    @Environment(\.openURL) private var openURL
-    @ObservedObject private var calendarManager = CalendarManager.shared
-    let events: [EventModel]
-    @Default(.autoScrollToNextEvent) private var autoScrollToNextEvent
-    @Default(.showFullEventTitles) private var showFullEventTitles
-
-
-    static func filteredEvents(events: [EventModel]) -> [EventModel] {
-        events.filter { event in
-            if event.type.isReminder {
-                if case .reminder(let completed) = event.type {
-                    return !completed || !Defaults[.hideCompletedReminders]
-                }
-            }
-            // Filter out all-day events if setting is enabled
-            if event.isAllDay && Defaults[.hideAllDayEvents] {
-                return false
-            }
-            return true
-        }
-    }
-
-    private var filteredEvents: [EventModel] {
-        Self.filteredEvents(events: events)
-    }
-
-    private func scrollToRelevantEvent(proxy: ScrollViewProxy) {
-        let now = Date()
-        // Determine a single target using preferred search order:
-        // 1) first non-all-day upcoming/in-progress event
-        // 2) first all-day event
-        // 3) last event (fallback)
-        let nonAllDayUpcoming = filteredEvents.first(where: { !$0.isAllDay && $0.end > now })
-        let firstAllDay = filteredEvents.first(where: { $0.isAllDay })
-        let lastEvent = filteredEvents.last
-        guard let target = nonAllDayUpcoming ?? firstAllDay ?? lastEvent else { return }
-
-        Task { @MainActor in
-            withTransaction(Transaction(animation: nil)) {
-                proxy.scrollTo(target.id, anchor: .top)
-            }
-        }
+    private var dateLabel: String {
+        let parts = Calendar.current.dateComponents([.month, .day], from: selectedDate)
+        return "\(parts.month!)月\(parts.day!)日"
     }
 
     var body: some View {
-        ScrollViewReader { proxy in
-            List {
-                ForEach(filteredEvents) { event in
-                    Button(action: {
-                        if let url = event.calendarAppURL() {
-                            openURL(url)
-                        }
-                    }) {
-                        eventRow(event)
+        ZStack(alignment: .bottom) {
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 4) {
+                    if store.todos(on: selectedDate).isEmpty {
+                        Text(
+                            Calendar.current.isDateInToday(selectedDate)
+                                ? "今日暂无待办" : "\(dateLabel)暂无待办"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(Color(white: 0.65))
+                        .padding(.top, 8)
                     }
-                    .id(event.id)
-                    .padding(.leading, -5)
-                    .buttonStyle(PlainButtonStyle())
-                    .listRowSeparator(.automatic)
-                    .listRowSeparatorTint(.gray.opacity(0.2))
-                    .listRowBackground(Color.clear)
-                }
-            }
-            .listStyle(.plain)
-            .scrollIndicators(.never)
-            .scrollContentBackground(.hidden)
-            .background(Color.clear)
-            .onAppear {
-                scrollToRelevantEvent(proxy: proxy)
-            }
-            .onChange(of: filteredEvents) { _, _ in
-                scrollToRelevantEvent(proxy: proxy)
-            }
-        }
-        Spacer(minLength: 0)
-    }
-
-    private func eventRow(_ event: EventModel) -> some View {
-        if event.type.isReminder {
-            let isCompleted: Bool
-            if case .reminder(let completed) = event.type {
-                isCompleted = completed
-            } else {
-                isCompleted = false
-            }
-            return AnyView(
-                HStack(spacing: 8) {
-                    ReminderToggle(
-                        isOn: Binding(
-                            get: { isCompleted },
-                            set: { newValue in
-                                Task {
-                                    await calendarManager.setReminderCompleted(
-                                        reminderID: event.id, completed: newValue
-                                    )
-                                }
+                    ForEach(store.todos(on: selectedDate)) { todo in
+                        SwipeableTodoRow(
+                            todo: todo,
+                            isRevealed: Binding(
+                                get: { revealedTodoID == todo.id },
+                                set: { revealedTodoID = $0 ? todo.id : nil }
+                            ),
+                            onToggle: { store.toggle(todo.id) },
+                            onDelete: {
+                                store.delete(todo.id)
+                                revealedTodoID = nil
                             }
-                        ),
-                        color: Color(event.calendar.color)
-                    )
-                    .opacity(1.0)  // Ensure the toggle is always fully opaque
-                    HStack {
-                        Text(event.title)
-                            .font(.callout)
-                            .foregroundColor(.white)
-                            .lineLimit(showFullEventTitles ? nil : 1)
-                        Spacer(minLength: 0)
-                        VStack(alignment: .trailing, spacing: 4) {
-                            if event.isAllDay {
-                                Text("All-day")
-                                    .font(.caption)
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.white)
-                                    .lineLimit(1)
-                            } else {
-                                Text(event.start, style: .time)
-                                    .foregroundColor(.white)
-                                    .font(.caption)
-                            }
-                        }
+                        )
                     }
-                    .opacity(
-                        isCompleted
-                            ? 0.4
-                            : event.start < Date.now && Calendar.current.isDateInToday(event.start)
-                                ? 0.6 : 1.0
-                    )
                 }
-                .padding(.vertical, 4)
-            )
-        } else {
-            return AnyView(
-                HStack(alignment: .top, spacing: 4) {
-                    Rectangle()
-                        .fill(Color(event.calendar.color))
-                        .frame(width: 3)
-                        .cornerRadius(1.5)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, hoveringBottom ? 36 : 10)
+            }
+            .scrollIndicators(.hidden)
 
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(event.title)
-                            .font(.callout)
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                            .lineLimit(showFullEventTitles ? nil : 2)
-
-                        if let location = event.location, !location.isEmpty {
-                            Text(location)
-                                .font(.caption)
-                                .foregroundColor(Color(white: 0.65))
-                                .lineLimit(1)
-                        }
-                    }
-                    Spacer(minLength: 0)
-                    VStack(alignment: .trailing, spacing: 4) {
-                        if event.isAllDay {
-                            Text("All-day")
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundColor(.white)
-                                .lineLimit(1)
-                        } else {
-                            Text(event.start, style: .time)
-                                .foregroundColor(.white)
-                            Text(event.end, style: .time)
-                                .foregroundColor(Color(white: 0.65))
-                        }
-                    }
-                    .font(.caption)
-                    .frame(minWidth: 44, alignment: .trailing)
-                }
-                .opacity(
-                    event.eventStatus == .ended && Calendar.current.isDateInToday(event.start)
-                        ? 0.6 : 1.0)
-            )
-        }
-    }
-}
-
-struct ReminderToggle: View {
-    @Binding var isOn: Bool
-    var color: Color
-
-    var body: some View {
-        Button(action: {
-            isOn.toggle()
-        }) {
             ZStack {
-                // Outer ring
-                Circle()
-                    .strokeBorder(color, lineWidth: 2)
-                    .frame(width: 14, height: 14)
-                // Inner fill
-                if isOn {
-                    Circle()
-                        .fill(color)
-                        .frame(width: 8, height: 8)
+                Color.black.opacity(0.001)
+                HStack(spacing: 4) {
+                    TextField(
+                        "", text: draft,
+                        prompt: Text("请记录\(dateLabel)待办事项")
+                            .foregroundColor(Color(white: 0.65))
+                    )
+                    .font(.system(size: 11))
+                    .textFieldStyle(.plain)
+                    .focused($inputFocused)
+                    .onSubmit(addTodo)
+                    .accessibilityLabel("请记录\(dateLabel)待办事项")
+                    Button(action: addTodo) {
+                        Image(systemName: "arrow.up.circle.fill")
+                            .font(.system(size: 17))
+                            .foregroundStyle(Color.effectiveAccent)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(
+                        draft.wrappedValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    )
+                    .accessibilityLabel("添加待办")
                 }
-                Circle()
-                    .fill(Color.black.opacity(0.001))
-                    .frame(width: 14, height: 14)
+                .padding(.horizontal, 7)
+                .frame(height: 30)
+                .background(Color(white: 0.14), in: RoundedRectangle(cornerRadius: 8))
+                .opacity(hoveringBottom ? 1 : 0)
+                .offset(y: hoveringBottom || reduceMotion ? 0 : 4)
+                .allowsHitTesting(hoveringBottom)
+                .accessibilityHidden(!hoveringBottom)
+            }
+            .frame(height: 32)
+            .contentShape(Rectangle())
+            .onHover(perform: setHover)
+        }
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.18), value: hoveringBottom)
+        .onChange(of: selectedDate) { _, _ in
+            inputFocused = false
+            revealedTodoID = nil
+        }
+        .onDisappear { setHover(false) }
+    }
+
+    private func setHover(_ hovering: Bool) {
+        hoveringBottom = hovering
+        if !hovering { inputFocused = false }
+    }
+
+    private func addTodo() {
+        if store.add(draft.wrappedValue, on: selectedDate) {
+            drafts[dayKey] = ""
+        }
+    }
+}
+
+private struct SwipeableTodoRow: View {
+    let todo: DailyTodo
+    @Binding var isRevealed: Bool
+    let onToggle: () -> Void
+    let onDelete: () -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        ZStack(alignment: .trailing) {
+            Button(role: .destructive, action: onDelete) {
+                Text("删除")
+                    .font(.caption)
+                    .foregroundStyle(.white)
+                    .frame(width: 48, height: 26)
+                    .background(.red, in: RoundedRectangle(cornerRadius: 5))
+            }
+            .buttonStyle(.plain)
+            .opacity(isRevealed ? 1 : 0)
+            .allowsHitTesting(isRevealed)
+            .accessibilityHidden(!isRevealed)
+            .accessibilityLabel("删除待办：\(todo.title)")
+
+            HStack(alignment: .top, spacing: 7) {
+                Image(systemName: todo.isCompleted ? "checkmark.square.fill" : "square")
+                    .font(.system(size: 14))
+                    .foregroundStyle(todo.isCompleted ? Color(white: 0.55) : Color.effectiveAccent)
+                Text(todo.title)
+                    .font(.callout)
+                    .foregroundStyle(todo.isCompleted ? Color(white: 0.55) : .white)
+                    .strikethrough(todo.isCompleted)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 0)
+            }
+            .padding(.vertical, 3)
+            .frame(minHeight: 26)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.black)
+            .contentShape(Rectangle())
+            .accessibilityElement(children: .ignore)
+            .accessibilityAddTraits(.isButton)
+            .accessibilityLabel(todo.title)
+            .accessibilityValue(todo.isCompleted ? "已完成" : "未完成")
+            .accessibilityHint("点击切换完成状态，向左滑动显示删除按钮")
+            .accessibilityAction { activateRow() }
+            .accessibilityAction(named: Text("显示删除按钮")) { isRevealed = true }
+            .gesture(
+                // Once a drag is recognized, mouse-up must never activate the row.
+                // Measure in the stationary row, not the content that slides left.
+                DragGesture(minimumDistance: 12, coordinateSpace: .named(todo.id))
+                    .onChanged { value in
+                        guard abs(value.translation.width) > abs(value.translation.height) * 1.5 else { return }
+                        if value.translation.width < -20 { isRevealed = true }
+                        if value.translation.width > 20 { isRevealed = false }
+                    }
+                    .exclusively(before: TapGesture().onEnded { activateRow() })
+            )
+            .offset(x: isRevealed ? -56 : 0)
+        }
+        .coordinateSpace(name: todo.id)
+        .clipped()
+        .background(TodoSwipeMonitor { isRevealed = $0 })
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.18), value: isRevealed)
+    }
+
+    private func activateRow() {
+        if isRevealed { isRevealed = false } else { onToggle() }
+    }
+}
+
+// Trackpad horizontal scrolling does not generate a SwiftUI DragGesture on macOS.
+// Only consume horizontal events over this visible row; vertical scrolling stays native.
+private struct TodoSwipeMonitor: NSViewRepresentable {
+    let onSwipe: (Bool) -> Void
+
+    func makeCoordinator() -> Coordinator { Coordinator(onSwipe: onSwipe) }
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        context.coordinator.install(on: view)
+        return view
+    }
+    func updateNSView(_ nsView: NSView, context: Context) {
+        context.coordinator.onSwipe = onSwipe
+    }
+    static func dismantleNSView(_ nsView: NSView, coordinator: Coordinator) {
+        coordinator.remove()
+    }
+
+    @MainActor final class Coordinator {
+        var onSwipe: (Bool) -> Void
+        private var monitor: Any?
+        private var distance: CGFloat = 0
+        private var lastEventTime: TimeInterval = 0
+        init(onSwipe: @escaping (Bool) -> Void) { self.onSwipe = onSwipe }
+
+        func install(on view: NSView) {
+            monitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [weak self, weak view] event in
+                guard let self, let view, let window = view.window,
+                      event.window === window,
+                      view.visibleRect.contains(view.convert(event.locationInWindow, from: nil))
+                else { return event }
+                if event.phase == .began || event.timestamp - self.lastEventTime > 0.3 {
+                    self.distance = 0
+                }
+                self.lastEventTime = event.timestamp
+                guard abs(event.scrollingDeltaX) > abs(event.scrollingDeltaY) * 1.5 else {
+                    if event.phase == .ended || event.phase == .cancelled { self.distance = 0 }
+                    return event
+                }
+                guard event.momentumPhase.isEmpty else { return nil }
+                self.distance += event.scrollingDeltaX * (event.hasPreciseScrollingDeltas ? 1 : 8)
+                if abs(self.distance) >= 20 {
+                    self.onSwipe(self.distance < 0)
+                    self.distance = 0
+                }
+                return nil
             }
         }
-        .buttonStyle(PlainButtonStyle())
-        .padding(0)
-        .accessibilityLabel(isOn ? "Mark as incomplete" : "Mark as complete")
+        func remove() {
+            if let monitor { NSEvent.removeMonitor(monitor) }
+            monitor = nil
+        }
     }
 }
 

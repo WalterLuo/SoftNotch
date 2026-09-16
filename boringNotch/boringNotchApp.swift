@@ -2,7 +2,7 @@
 //  boringNotchApp.swift
 //  boringNotchApp
 //
-//  Created by Harsh Vardhan  Goswami  on 02/08/24.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import AVFoundation
@@ -29,7 +29,7 @@ struct DynamicNotchApp: App {
     }
 
     var body: some Scene {
-        MenuBarExtra("boring.notch", systemImage: "sparkle", isInserted: $showMenuBarIcon) {
+        MenuBarExtra("SoftNotch", systemImage: "sparkle", isInserted: $showMenuBarIcon) {
             Button("Settings") {
                 DispatchQueue.main.async {
                     SettingsWindowController.shared.showWindow()
@@ -38,7 +38,7 @@ struct DynamicNotchApp: App {
             .keyboardShortcut(KeyEquivalent(","), modifiers: .command)
             CheckForUpdatesView(updater: updaterController.updater)
             Divider()
-            Button("Restart Boring Notch") {
+            Button("Restart SoftNotch") {
                 ApplicationRelauncher.restart()
             }
             Button("Quit", role: .destructive) {
@@ -70,6 +70,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return false
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        // The notch window can count as visible even when the settings window is closed.
+        // Keep a recovery path when the user has hidden the menu bar icon.
+        if !Defaults[.menubarIcon] {
+            SettingsWindowController.shared.showWindow()
+            return false
+        }
+        return true
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -280,6 +290,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        ScreenshotManager.shared.startMonitoring()
 
         NotificationCenter.default.addObserver(
             self,

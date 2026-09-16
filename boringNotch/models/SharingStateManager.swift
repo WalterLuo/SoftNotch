@@ -2,7 +2,7 @@
 //  SharingStateManager.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-10-10.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import AppKit

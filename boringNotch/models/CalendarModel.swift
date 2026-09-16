@@ -2,7 +2,7 @@
 //  CalendarModel.swift
 //  Calendr
 //
-//  Created by Paker on 31/12/20.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //  Original source: https://github.com/pakerwreah/Calendr
 //
 

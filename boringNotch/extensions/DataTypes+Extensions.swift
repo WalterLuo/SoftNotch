@@ -2,7 +2,7 @@
     //  DataTypes+Extensions.swift
     //  boringNotch
     //
-    //  Created by Harsh Vardhan  Goswami  on 27/08/24.
+    //  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
     //
 
 import Foundation

@@ -2,7 +2,7 @@
 //  Constants.swift
 //  boringNotch
 //
-//  Created by Richard Kunkli on 2024. 10. 17..
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import SwiftUI
@@ -49,6 +49,11 @@ enum MediaControllerType: String, CaseIterable, Identifiable, Defaults.Serializa
     case youtubeMusic = "YouTube Music"
     
     var id: String { self.rawValue }
+
+    // Keep raw values stable so existing saved preferences still decode.
+    var displayName: String {
+        self == .nowPlaying ? "自动识别（网易云 / QQ 音乐等）" : rawValue
+    }
 }
 
 // Sneak peek styles for selection in settings
@@ -73,7 +78,7 @@ extension Defaults.Keys {
     static let menubarIcon = Key<Bool>("menubarIcon", default: true)
     static let showOnAllDisplays = Key<Bool>("showOnAllDisplays", default: false)
     static let automaticallySwitchDisplay = Key<Bool>("automaticallySwitchDisplay", default: true)
-    static let releaseName = Key<String>("releaseName", default: "Flying Rabbit 🐇🪽")
+    static let releaseName = Key<String>("releaseName", default: "噗噗噗💨")
     
     // MARK: Behavior
     static let minimumHoverDuration = Key<TimeInterval>("minimumHoverDuration", default: 0.3)

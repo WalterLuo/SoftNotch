@@ -2,7 +2,7 @@
 //  NotchShape.swift
 //  boringNotch
 //
-// Created by Kai Azim on 2023-08-24.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 // Original source: https://github.com/MrKai77/DynamicNotchKit
 // Modified by Alexander on 2025-05-18.
 

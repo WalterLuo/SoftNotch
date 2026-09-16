@@ -2,7 +2,7 @@
 //  Bookmark.swift
 //  boringNotch
 //
-//  Created by Alexander on 2025-10-08.
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import Foundation

@@ -2,7 +2,7 @@
 //  LottieAnimationContainer.swift
 //  boringNotch
 //
-//  Created by Richard Kunkli on 2024. 10. 29..
+//  Maintained by Walterluo for SoftNotch. Original attribution: docs/UPSTREAM_ATTRIBUTIONS.md.
 //
 
 import SwiftUI
