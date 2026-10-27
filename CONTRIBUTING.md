@@ -1,133 +1,40 @@
-# Contributing
+# Contributing to SoftNotch
 
-Thank you for taking the time to contribute! ❤️
+SoftNotch is Walter Luo's personal macOS notch utility, based on the available Sapphire source. Questions, bug reports and pull requests for this version belong in [WalterLuo/SoftNotch](https://github.com/WalterLuo/SoftNotch).
 
-These guidelines help streamline the contribution process for everyone involved. By following them, you'll make it easier for maintainers to review your work and collaborate with you effectively.
+## Development
 
-You can contribute in many ways: writing code, improving documentation, reporting bugs, requesting features, or creating tutorials and blog posts. Every contribution, large or small, helps make Boring Notch better.
+Start with [README.md](README.md) and the [build guide](docs/BUILDING.md). Open `SoftNotch.xcodeproj` in a full Xcode installation and use the `SoftNotch` scheme. The build script targets Apple Silicon / arm64 with a macOS 14.6 deployment target; see the build guide for newer bundled-framework requirements and the verified toolchain.
 
-## Table of Contents
+```sh
+scripts/build.sh
+python3 scripts/verify-branding.py
+```
 
-- [Localizations](#localizations)
-- [Contributing Code](#contributing-code)
-  - [Before You Start](#before-you-start)
-  - [Setting Up Your Environment](#setting-up-your-environment)
-  - [Making Changes](#making-changes)
-  - [Pull Requests](#pull-requests)
-<!-- - [Code Style Guidelines](#code-style-guidelines) -->
-- [Reporting Bugs](#reporting-bugs)
-- [Feature Requests](#feature-requests)
-- [Getting Help](#getting-help)
+Run the tests relevant to your change and include the exact commands and results in the pull request. See [validation records](docs/VALIDATION.md) for the distinction between compilation, automated tests and live feature checks. Permission-dependent or device-dependent behavior needs a separate runtime check.
 
-## Localizations
+## Reporting an issue
 
-Please submit all translations to [Crowdin](https://crowdin.com/project/boring-notch). New strings added to the `dev` branch from code changes will sync automatically to Crowdin, and Crowdin will automatically open a new PR with translations to allow us to integrate them.
+Search [existing issues](https://github.com/WalterLuo/SoftNotch/issues) before opening a new one. Include:
 
-## Contributing Code
+- The source commit or app version/build, macOS version and Mac architecture.
+- Reproduction steps, expected behavior and actual behavior.
+- Relevant permissions, connected devices or service configuration.
+- Redacted logs or screenshots when useful; for build failures, include the Xcode version and build command.
 
-### Before You Start
+State whether you are using the current Sapphire-derived implementation or the older boring.notch-derived SoftNotch. They have different project files and data identities; the current app does not migrate the older version's data.
 
-- **Check existing issues**: Before creating a new issue or starting work, search existing issues to avoid duplicates.
-- **Discuss major changes**: For significant features or major changes, please open an issue first to discuss your approach with maintainers and the community.
-<!-- - **Review the code style**: Familiarize yourself with our code style guidelines below to ensure consistency. -->
+For a feature request, describe the intended behavior and a concrete use case. Report vulnerabilities through the process in [SECURITY.md](SECURITY.md).
 
-> [!IMPORTANT]
-> All code contributions must be based on the `dev` branch, not `main`. Documentation changes should be based on `main` instead.
+## Submitting changes
 
-### Setting Up Your Environment
+- Keep changes focused and explain their user-visible effect.
+- Preserve the existing SwiftUI/AppKit interface, control order and animations unless the change explicitly addresses them.
+- Add matching English and Simplified Chinese localization entries for new interface text.
+- Keep the app/helper identities independent from Sapphire. Do not enable upstream update installation or analytics as an incidental change.
+- Exclude credentials, signing keys, local user settings and generated build products.
+- Update the relevant documentation when behavior, build steps or limitations change.
 
-1. **Fork the repository**: Click the "Fork" button at the top of the repository page to create your own copy.
+Contributions must be compatible with the repository's [GNU AGPL v3 license](LICENSE). Submit only work you have the right to contribute, preserve existing author and license notices, and identify the source and license of any third-party material. The inherited `CLA.md` refers to an MIT license; signing that upstream document is not a submission requirement for this SoftNotch repository.
 
-2. **Clone your fork**:
-   ```bash
-   git clone https://github.com/{your-username}/boring.notch.git
-   cd boring.notch
-   ```
-   Replace `{your-username}` with your GitHub username.
-
-3. **Switch to the `dev` branch**:
-   ```bash
-   git checkout dev
-   ```
-   All code contributions must be based on the `dev` branch, not `main`. Documentation changes should be based on `main` instead.
-
-5. **Create a new feature branch**:
-   ```bash
-   git checkout -b feature/{your-feature-name}
-   ```
-   Replace `{your-feature-name}` with a descriptive name. Use lowercase letters, numbers, and hyphens only (e.g., `feature/add-dark-mode` or `fix/notification-crash`).
-
-### Making Changes
-
-1. **Make your changes**: Implement your feature or bug fix. Write clean, well-documented code <!-- following the project's style guidelines. -->
-
-2. **Test your changes**: Ensure your changes work as expected and don't break existing functionality.
-
-3. **Commit your changes**:
-   ```bash
-   git add .
-   git commit -m "Add descriptive commit message"
-   ```
-   Write clear, concise commit messages that explain what your changes do and why.
-
-4. **Keep your branch up to date**:
-   Regularly sync your branch with the latest changes from the `dev` branch to avoid conflicts.
-
-5. **Push to your fork**:
-   ```bash
-   git push origin feature/{your-feature-name}
-   ```
-
-### Pull Requests
-
-1. **Create a pull request**: Go to the original repository and click "New Pull Request." Select your feature branch and set the base branch to `dev`.
-
-2. **Write a detailed description**: Your PR should include:
-   - A clear title summarizing the changes
-   - A detailed description of what was changed and why
-   - Reference to any related issues (e.g., "Fixes #123" or "Relates to #456")
-   - Screenshots or screen recordings for UI changes
-
-3. **Respond to feedback**: Maintainers may request changes.
-
-4. **Be patient**: Reviews take time. Maintainers will get to your PR as soon as they can.
-
-<!-- ## Code Style Guidelines
-
-- Follow the existing code style and conventions used in the project
-- Write clear, self-documenting code with meaningful variable and function names
-- Add comments for complex logic or non-obvious implementations
-- Ensure your code is properly formatted before committing
-- Remove any debugging code, console logs, or commented-out code before submitting -->
-
-## Reporting Bugs
-
-When reporting bugs, please include:
-
-- A clear, descriptive title
-- Steps to reproduce the issue
-- Expected behavior vs. actual behavior
-- Screenshots or error messages if applicable
-- Your environment details (OS version, app version, etc.)
-
-## Feature Requests
-
-Feature requests are welcome! Please:
-
-- Check if the feature has already been requested
-- Clearly describe the feature and its use case
-- Explain why this feature would be valuable to users
-- Be open to discussion and alternative approaches
-
-## Getting Help
-
-If you need help or have questions:
-
-- Check the project documentation
-- Search existing issues for similar questions
-- Open a new issue with the "question" label
-- Join our [community Discord server](https://discord.com/servers/boring-notch-1269588937320566815)
-
----
-
-Thank you for contributing to Boring Notch! Your efforts help make this project better for everyone. 🎉
+Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).

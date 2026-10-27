@@ -1,0 +1,28 @@
+{
+  "application": "/Applications/SoftNotch.app",
+  "version": "1.0.0",
+  "architecture": "arm64",
+  "archive": "dist/SoftNotch-1.0.0-macOS-arm64.zip",
+  "archiveBytes": 124765914,
+  "sha256": "fc5c8c9d7234fc01e5569d1ac19da9a7fadccf6e79b19e71d9e227f9fc871764",
+  "targetedTestsPassed": 14,
+  "localizationKeys": 1684,
+  "strictSignature": "passed for installed and extracted app",
+  "testBundleIncluded": false,
+  "licenseAndCredits": "exact source copies bundled",
+  "liveUI": [
+    "first launch",
+    "Chinese settings",
+    "English language switch",
+    "Chinese language restored",
+    "personal edition About"
+  ],
+  "pending": [
+    "user macOS Accessibility authorization",
+    "notch runtime and permission-dependent feature validation",
+    "device and online integrations"
+  ],
+  "commercialFeatureParity": "not claimed; upstream source omits private implementations",
+  "date": "2026-10-16",
+  "scope": "Historical validation of the initial local build, not the 2026-10-27 source synchronization"
+}

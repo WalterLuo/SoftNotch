@@ -1,4 +1,4 @@
-name: SoftNotch 构建与打包
+name: SoftNotch source checks
 
 on:
   push:
@@ -6,36 +6,90 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      full_build:
+        description: Run arm64 Release build and selected tests (requires a recent Xcode SDK)
+        type: boolean
+        default: false
+      runner:
+        description: macOS runner label for the optional build
+        type: string
+        default: macos-latest
 
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 concurrency:
-  group: softnotch-${{ github.event.pull_request.number || github.ref }}
+  group: softnotch-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: 测试并生成 Apple 芯片版本
-    runs-on: macos-15
-    timeout-minutes: 30
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+  source-checks:
+    name: Identity, localization and project files
+    runs-on: macos-latest
+    timeout-minutes: 10
     steps:
-      - name: 获取源码
+      - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: 检查 Xcode
-        run: xcodebuild -version
-      - name: 运行回归测试
-        run: bash scripts/test.sh
-      - name: 构建并打包 SoftNotch
-        run: bash scripts/build.sh
-      - name: 上传安装包和校验值
+      - name: Verify identity, localization and icons
+        run: python3 scripts/verify-branding.py
+      - name: Validate shell scripts and Xcode project
+        run: |
+          bash -n scripts/build.sh scripts/package.sh
+          plutil -lint SoftNotch.xcodeproj/project.pbxproj
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import subprocess
+          import xml.etree.ElementTree as ET
+          json.loads(pathlib.Path('SoftNotch.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved').read_text())
+          ET.parse('SoftNotch.xcodeproj/xcshareddata/xcschemes/SoftNotch.xcscheme')
+          files = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
+          for name in filter(None, files):
+              path = pathlib.Path(name)
+              if path.is_symlink():
+                  assert path.exists(), f'Broken repository symlink: {path}'
+          print('Dependency lockfile, scheme and repository symlinks passed.')
+          PY
+
+  build:
+    name: Optional arm64 build and selected tests
+    if: github.event_name == 'workflow_dispatch' && inputs.full_build
+    needs: source-checks
+    runs-on: ${{ inputs.runner }}
+    timeout-minutes: 60
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Record toolchain
+        run: |
+          mkdir -p build
+          echo "DEVELOPER_DIR=$(xcode-select -p)" >> "$GITHUB_ENV"
+          { sw_vers; uname -m; xcodebuild -version; xcrun --sdk macosx --show-sdk-version; } | tee build/ci-environment.log
+          test "$(uname -m)" = arm64 || { echo 'Select an Apple Silicon macOS runner.'; exit 1; }
+      - name: Build Release
+        run: scripts/build.sh 2>&1 | tee build/ci-build.log
+      - name: Run selected regression tests
+        run: |
+          scripts/build.sh test \
+            -only-testing:SoftNotchTests/SoftNotchIdentityTests \
+            -only-testing:SoftNotchTests/CalendarViewModelTests \
+            -only-testing:SoftNotchTests/CalendarVisibilityFilterTests \
+            -only-testing:SoftNotchTests/FileDragPasteboardTests \
+            2>&1 | tee build/ci-tests.log
+      - name: Upload diagnostic logs
+        if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: SoftNotch-AppleSilicon-${{ github.run_number }}
-          path: dist/*
-          if-no-files-found: error
+          name: SoftNotch-build-logs-${{ github.run_number }}
+          path: build/ci-*.log
+          if-no-files-found: warn
           retention-days: 14

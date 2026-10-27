@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-27",
+  "timezone": "Asia/Shanghai",
+  "scope": "GitHub source synchronization; local validation with existing dependency and DerivedData caches",
+  "version": "1.0.0",
+  "build": "20261016.1",
+  "environment": {
+    "architecture": "arm64",
+    "macOS": "27.0.1",
+    "macOSBuild": "26A434",
+    "xcode": "27.1",
+    "xcodeBuild": "27A9275",
+    "macOSSDK": "27.0"
+  },
+  "releaseBuild": "passed",
+  "tests": {
+    "passed": 22,
+    "failed": 0,
+    "skipped": 0,
+    "suites": {
+      "SoftNotchIdentityTests": 4,
+      "CalendarViewModelTests": 8,
+      "CalendarVisibilityFilterTests": 6,
+      "FileDragPasteboardTests": 4
+    },
+    "resultBundle": "build/github-tests-20261027.xcresult"
+  },
+  "sourceBranding": "passed",
+  "localizationKeys": 1684,
+  "iconRepresentations": 10,
+  "shellSyntax": "passed",
+  "deploymentTarget": "14.6",
+  "bundledMediaRemoteAdapterMinimumOS": "26.0",
+  "warnings": [
+    "Embedded extensions report version 2.9 while main app reports 1.0.0",
+    "Helper re-signing skipped without signing identity",
+    "AppIntents extraction skipped for targets without metadata",
+    "Test dSYM generation references expired XCTest module cache"
+  ],
+  "notPerformed": [
+    "Empty-cache clean build",
+    "Full test suite",
+    "GUI interaction validation",
+    "Older macOS or Intel validation",
+    "Device and online integration validation",
+    "Signing, packaging, installation or notarization",
+    "Binary GitHub Release"
+  ],
+  "logs": [
+    "build/github-release-build-20261027.log",
+    "build/github-tests-20261027.log",
+    "build/github-tests-20261027-summary.json"
+  ]
+}
