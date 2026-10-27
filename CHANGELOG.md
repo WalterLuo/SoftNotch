@@ -1,5 +1,16 @@
 # 变更记录
 
+## v1.0.0 — 2026-10-27
+
+当前 Sapphire 衍生版首次通过 GitHub Release 提供 Apple Silicon / arm64 安装包。应用版本为 **1.0.0 / 20261016.1**。
+
+- 发布 `SoftNotch-1.0.0-macOS-arm64.zip` 和 `SHA256SUMS`，附安装、校验及兼容范围说明。
+- 包含日历每次重新展开回到今天的修复，同时保留面板持续展开时浏览其他日期的行为。
+- 提供独立的主程序与辅助程序身份、默认简体中文及 English 设置、快捷截图和现有公开源码功能。
+- 本地签名，未做 Apple Developer ID 公证；未启用自动更新，也不自动迁移旧版数据。
+
+下载与完整说明见 [GitHub Release](https://github.com/WalterLuo/SoftNotch/releases/tag/v1.0.0) / [仓库内发行说明](docs/releases/v1.0.0.md)。
+
 ## 2026-10-27 — GitHub 源码同步
 
 应用版本仍为 **1.0.0 / 20261016.1**；本次是源码与文档同步，不是新的二进制发行版。

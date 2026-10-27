@@ -11,14 +11,21 @@ STAGE="$(mktemp -d /private/tmp/softnotch-package.XXXXXX)"
 trap 'rm -rf "$STAGE"' EXIT
 APP="$STAGE/SoftNotch.app"
 ditto --norsrc --noextattr --noacl "$SOURCE" "$APP"
-python3 -c 'import pathlib,shutil,sys; p=pathlib.Path(sys.argv[1])/"Contents/PlugIns/SoftNotchTests.xctest"; shutil.rmtree(p) if p.exists() else None' "$APP"
+python3 - "$APP" <<'PY'
+import pathlib, shutil, sys
+plugins = pathlib.Path(sys.argv[1]) / 'Contents/PlugIns'
+for name in ['SoftNotchTests.xctest', 'SoftNotchTests.xctest.dSYM']:
+    path = plugins / name
+    if path.exists():
+        shutil.rmtree(path)
+PY
 cp LICENSE "$APP/Contents/Resources/LICENSE"
 cp CREDITS.md "$APP/Contents/Resources/CREDITS.md"
 python3 scripts/sign-local.py "$APP"
 python3 scripts/verify-branding.py "$APP"
 ditto -c -k --norsrc --noextattr --keepParent "$APP" "$STAGE/SoftNotch-1.0.0-macOS-arm64.zip"
 cp "$STAGE/SoftNotch-1.0.0-macOS-arm64.zip" dist/
-shasum -a 256 dist/SoftNotch-1.0.0-macOS-arm64.zip > dist/SHA256SUMS
+(cd dist && shasum -a 256 SoftNotch-1.0.0-macOS-arm64.zip) > dist/SHA256SUMS
 if [[ "${SOFTNOTCH_INSTALL:-0}" == "1" ]]; then
   [[ ! -e /Applications/SoftNotch.app ]] || { echo 'An installed SoftNotch already exists; back it up first.' >&2; exit 1; }
   ditto --norsrc --noextattr --noacl "$APP" /Applications/SoftNotch.app

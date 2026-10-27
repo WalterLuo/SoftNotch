@@ -2,7 +2,11 @@
 
 Walter Luo 的个人 macOS 刘海工具，基于 [Sapphire](https://github.com/cshariq/Sapphire) 公开源码及本地修改构建。保留原有 SwiftUI / AppKit 界面、动画和已实现功能，使用独立的应用身份与数据目录。
 
-当前源码版本 **1.0.0**，构建号 **20261016.1**，构建脚本面向 **Apple Silicon / arm64**。本轮更新同步源码与文档，未发布新的二进制 Release，也未变更版本号。
+当前版本 **1.0.0**，构建号 **20261016.1**，安装包面向 **Apple Silicon / arm64**。
+
+[下载 SoftNotch 1.0.0](https://github.com/WalterLuo/SoftNotch/releases/download/v1.0.0/SoftNotch-1.0.0-macOS-arm64.zip) · [Release 与更新说明](https://github.com/WalterLuo/SoftNotch/releases/tag/v1.0.0)
+
+安装包使用本地签名，未经 Apple Developer ID 公证。解压后将 `SoftNotch.app` 放入“应用程序”；已有同名应用时先退出并备份。下载、校验及兼容范围见 [发行说明](docs/releases/v1.0.0.md)。
 
 ## 功能
 
@@ -46,12 +50,13 @@ scripts/package.sh
 | 辅助程序 | `com.walterluo.softnotchHelper` |
 | 链接协议 | `softnotch://` |
 | 数据迁移 | 不自动导入 Sapphire 或旧版 SoftNotch 数据 |
-| 更新方式 | 手动构建、安装；未接入自动更新源 |
+| 更新方式 | 从 GitHub Release 下载或自行构建后手动安装；未接入自动更新源 |
 
 本仓库早期版本基于 boring.notch，保留在 [旧版提交](https://github.com/WalterLuo/SoftNotch/tree/d1a4137b6c68f5faffbf1c5d2f7bbccf93bc13f2) 中。当前版本改用 Sapphire 源码、`SoftNotch.xcodeproj` 和独立数据身份；旧版的工程、安装包及工作流说明不能直接用于当前源码。参见 [版本迁移说明](docs/MIGRATION.md)。
 
 ## 文档
 
+- [1.0.0 发行说明与下载](docs/releases/v1.0.0.md)
 - [构建、测试与本地打包](docs/BUILDING.md)
 - [验证记录与已知限制](docs/VALIDATION.md)
 - [版本迁移说明](docs/MIGRATION.md) · [更新记录](CHANGELOG.md)

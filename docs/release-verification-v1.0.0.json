@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-27",
+  "releaseTag": "v1.0.0",
+  "runtimeSourceCommit": "500b02815fbd45b320a24ab06297a1bddc4a79fd",
+  "version": "1.0.0",
+  "build": "20261016.1",
+  "architecture": "arm64",
+  "releaseBuild": "passed",
+  "archive": "SoftNotch-1.0.0-macOS-arm64.zip",
+  "archiveBytes": 122945276,
+  "sha256": "3f1a059a686f0dd19040b1776a8c6a9c0308b4313ad3aee7abc8e6d362b1410b",
+  "archiveCRC": "passed",
+  "extractedAppSignature": "codesign --verify --deep --strict passed outside sandbox",
+  "mainAndHelperSigningIdentity": "SoftNotch Local Development",
+  "testBundleIncluded": false,
+  "testDebugSymbolsIncluded": false,
+  "privateSigningMaterialsIncluded": false,
+  "firebaseConfiguration": "matches checked-in stub; API_KEY and CLIENT_ID empty",
+  "licenseCreditsAndGuide": "exact current source copies",
+  "sourceBranding": "passed; 1684 bilingual keys and 10 icon representations",
+  "notarized": false,
+  "liveUITestedThisRelease": false,
+  "selectedRegressionTests": {
+    "passed": 22,
+    "failed": 0,
+    "scope": "Earlier 2026-10-27 validation of unchanged runtime source; existing caches reused"
+  }
+}

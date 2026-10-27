@@ -1,5 +1,18 @@
 # SoftNotch 1.0.0 验证记录
 
+## 2026-10-27 — v1.0.0 Release 打包验证
+
+沿用下方已验证的运行时代码，重新完成 Release / arm64 构建、本地签名和 ZIP 打包。版本为 `1.0.0`，构建号为 `20261016.1`；本轮打包脚本新增移除测试调试符号，并使 SHA-256 文件使用安装包文件名，便于下载后直接校验。
+
+- `scripts/build.sh` 构建成功；`SOFTNOTCH_INSTALL=0 scripts/package.sh` 打包成功，没有覆盖本机已安装应用。
+- ZIP CRC 与 SHA-256 校验通过；ZIP 解压后的应用通过 `codesign --verify --deep --strict`。签名校验在可访问 macOS 安全服务的正常执行环境下完成。
+- 主程序与辅助程序均使用 `SoftNotch Local Development` 签名身份；没有修改系统证书信任，未做 Developer ID 公证。
+- 主程序为 arm64，应用身份、版本、链接协议与源码一致；媒体框架符号链接完整。
+- 包内不含测试 bundle、测试 dSYM 或私有签名材料。`LICENSE`、`CREDITS.md`、`SoftNotch-Guide.txt` 与当前源文件逐字节一致，Firebase 配置与仓库占位文件一致。
+- 同一运行时代码此前的 22 项选定测试通过结果继续适用；本轮未新增 GUI、旧系统、设备或在线集成实测。
+
+资产为 `SoftNotch-1.0.0-macOS-arm64.zip`（122,945,276 字节）及 `SHA256SUMS`，详见 [发行说明](releases/v1.0.0.md) 和 [机器可读验证记录](release-verification-v1.0.0.json)。本地日志：`build/release-v1.0.0-build-20261027.log`、`build/release-v1.0.0-package-20261027.log`。下面的源码同步记录与 10 月 16 日记录按原时间范围保留。
+
 ## 2026-10-27 — GitHub 同步前验证
 
 环境：Apple Silicon / arm64，macOS 27.0.1（26A434），Xcode 27.1（27A9275），macOS SDK 27.0。应用版本 `1.0.0`，构建号 `20261016.1`。

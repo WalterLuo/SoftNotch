@@ -23,4 +23,6 @@
 
 ## 与旧版的区别
 
-此前 boring.notch 版工作流使用 Xcode 16.4、`scripts/test.sh` 和旧的 DMG / ZIP 脚本，这些不适用于当前 Sapphire 衍生工程。旧工作流随 [旧版提交](https://github.com/WalterLuo/SoftNotch/tree/d1a4137b6c68f5faffbf1c5d2f7bbccf93bc13f2) 保留。当前安装包需按构建指南在本机生成，Actions 日志 artifact 不是安装包。
+此前 boring.notch 版工作流使用 Xcode 16.4、`scripts/test.sh` 和旧的 DMG / ZIP 脚本，这些不适用于当前 Sapphire 衍生工程。旧工作流随 [旧版提交](https://github.com/WalterLuo/SoftNotch/tree/d1a4137b6c68f5faffbf1c5d2f7bbccf93bc13f2) 保留。
+
+当前安装包按构建指南在本机生成、签名和校验后，上传到 [GitHub Release](https://github.com/WalterLuo/SoftNotch/releases/tag/v1.0.0)。Actions 日志 artifact 不是安装包；工作流成功也不会自动发布新的 Release。

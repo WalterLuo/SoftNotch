@@ -2,6 +2,8 @@
 
 本指南对应当前 Sapphire 衍生 SoftNotch。主工程为 `SoftNotch.xcodeproj`，scheme 为 `SoftNotch`，应用版本为 1.0.0，构建号为 20261016.1。旧版 boring.notch 工程的构建步骤见历史提交，不适用于当前目录结构。
 
+需要直接安装时，可从 [GitHub Release](https://github.com/WalterLuo/SoftNotch/releases/tag/v1.0.0) 下载 Apple Silicon ZIP 与 `SHA256SUMS`，按 [发行说明](releases/v1.0.0.md) 校验并安装。下文介绍自行构建的步骤。
+
 ## 环境与兼容范围
 
 2026-10-27 的 Release 构建通过环境：
@@ -88,12 +90,12 @@ scripts/package.sh
 可在仓库根目录校验压缩包：
 
 ```sh
-shasum -a 256 -c dist/SHA256SUMS
+(cd dist && shasum -a 256 -c SHA256SUMS)
 ```
 
 首次签名会在 `~/Library/Application Support/SoftNotchLocalSigning/` 创建专用钥匙串及签名材料，后续打包复用该身份。私钥和密码保留在该本机目录，不进入仓库；脚本不修改系统证书信任。请不要把该目录附到 issue、日志或提交中。
 
-这些包是本地签名构建，未经 Apple Developer ID 公证。本轮 GitHub 更新同步源码及文档，没有发布新的二进制 Release。
+这些包是本地签名构建，未经 Apple Developer ID 公证。GitHub Release 提供的是本机打包后上传的安装包；签名和打包不在 GitHub Actions 中执行。发行包对应的检查记录见 [VALIDATION.md](VALIDATION.md)。
 
 ## 手动安装与更新
 
@@ -107,7 +109,7 @@ SOFTNOTCH_INSTALL=1 scripts/package.sh
 
 该选项在 `/Applications/SoftNotch.app` 已存在时会停止，不会替用户覆盖已有安装。
 
-应用未接入自动更新源；源码更新后需要重新构建、打包和安装。当前应用不会自动导入旧版 boring.notch 衍生 SoftNotch 或 Sapphire 的数据，详见 [MIGRATION.md](MIGRATION.md)。
+应用未接入自动更新源；更新时需从 GitHub Release 下载新的安装包，或自行重新构建、打包和安装。当前应用不会自动导入旧版 boring.notch 衍生 SoftNotch 或 Sapphire 的数据，详见 [MIGRATION.md](MIGRATION.md)。
 
 ## 服务配置与公开源码边界
 
